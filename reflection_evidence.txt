@@ -1,0 +1,61 @@
+===== S1 SUMMARY =====
+# Run summary — 20260925_170833
+
+- Model: `claude-haiku-4-5-20251001`
+- Fixtures processed: 8
+- Estimated total cost: **$0.1481** USD
+
+| claim_id | outcome | claim_type | severity | turns | clarifications_asked | input_tokens | output_tokens | est_cost_usd | elapsed_s |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| claim_01_kitchen_fire | incomplete | - | - | 2 | 0 | 6382 | 526 | 0.009 | 5.2 |
+| claim_02_stolen_bike | incomplete | - | - | 2 | 0 | 6158 | 430 | 0.0083 | 4.3 |
+| claim_03_water_damage | routed | property_damage | high | 7 | 1 | 25999 | 1370 | 0.0328 | 16.9 |
+| claim_04_neighbor_injury | routed | liability | high | 5 | 0 | 17416 | 871 | 0.0218 | 11.6 |
+| claim_05_auto_collision | routed | auto | high | 4 | 0 | 14867 | 918 | 0.0195 | 10.4 |
+| claim_06_low_confidence_escalation | incomplete | - | - | 3 | 0 | 9466 | 666 | 0.0128 | 8.9 |
+| claim_07_tree_falls_on_car | routed | auto | medium | 5 | 1 | 19098 | 1144 | 0.0248 | 15.4 |
+| claim_08_minor_porch_damage | routed | property_damage | low | 4 | 0 | 14413 | 930 | 0.0191 | 10.3 |
+===== S1 TRACE =====
+{"turn": 1, "stop_reason": "tool_use", "tool_calls": [{"id": "toolu_01FNXT11YnusJ1fN1YgUdMmB", "name": "lookup_policy", "input": {"policy_id": "POL-1001"}}, {"id": "toolu_01E77JBmvz2ERSViLnCPtu7b", "name": "record_claim_fact", "input": {"field": "incident_type", "value": "kitchen fire - grease flare-up on stove"}}, {"id": "toolu_01EBfyoC4fNdWdkktk9emsnD", "name": "record_claim_fact", "input": {"field": "incident_date", "value": "yesterday evening"}}, {"id": "toolu_01EYEmKBgvPN1C9myoeGyd8k", "name": "record_claim_fact", "input": {"field": "location", "value": "kitchen"}}, {"id": "toolu_019TPcrptwAD8V4oURCxCGZx", "name": "record_claim_fact", "input": {"field": "damage_description", "value": "charred kitchen cabinets above stove, smoke damage on ceiling and walls"}}, {"id": "toolu_01McrzAyijP9mg74d7NepbZ7", "name": "record_claim_fact", "input": {"field": "injuries", "value": "none"}}], "latency_ms": 3180.4, "input_tokens": 2809, "output_tokens": 404}
+{"turn": 2, "stop_reason": "end_turn", "tool_calls": [], "latency_ms": 2056.2, "input_tokens": 3573, "output_tokens": 122}
+===== S2 BUDGET =====
+{
+  "token_counter_methodology": "Anthropic messages.count_tokens endpoint (model-authoritative)",
+  "baseline_tokens": 38708,
+  "assembled_tokens": 16839,
+  "reduction_pct": 56.5,
+  "per_section_tokens": {
+    "case_facts": 204,
+    "resolved_refund": 352,
+    "resolved_subscription": 512,
+    "active": 15789
+  },
+  "compression_api": {
+    "refund": {
+      "input_tokens": 12334,
+      "output_tokens": 339
+    },
+    "subscription": {
+      "input_tokens": 11475,
+      "output_tokens": 499
+    }
+  }
+}===== S2 EVAL =====
+{"question_id": "Q1", "question": "What was the actual refund amount processed for order ORD-77310?", "expected_fragment": "22.14", "model_answer": "According to the case facts provided, the refund amount processed for order ORD-77310 was **$22.14**.\n\nThis refund was processed to the customer's Visa for damaged items, and the customer also received a $5.00 discount code for future orders as a goodwill gesture.", "passed": true, "input_tokens": 16914, "output_tokens": 70}
+{"question_id": "Q2", "question": "Why did the customer cancel their subscription?", "expected_fragment": "duplicate", "model_answer": "According to the case facts, the customer's subscription (SUB-22119) was cancelled because of a **duplicate charge**. \n\nSpecifically, a duplicate charge of $18.99 posted on May 7th within the same billing cycle as the original $18.99 charge on May 3rd. Both charges were flagged by internal audit, but the automatic correction workflow failed to complete, which led the customer to cancel the subscription.", "passed": true, "input_tokens": 16905, "output_tokens": 97}
+{"question_id": "Q3", "question": "What is the failure code on the current payment-method update?", "expected_fragment": "AVS_MISMATCH", "model_answer": "Based on the case facts provided, the payment-method update failure code is **AVS_MISMATCH**.\n\nThis was confirmed when the agent attempted to add the new Visa card (ending in 7782) through the backend payment gateway tool in Turn 40. The gateway response returned the specific code \"AVS_MISMATCH,\" indicating a billing address verification failure between the submitted address and what the card-issuing bank has on file.", "passed": true, "input_tokens": 16910, "output_tokens": 98}
+{"question_id": "Q4", "question": "What is the last-4 of the new card the customer is trying to add?", "expected_fragment": "7782", "model_answer": "According to the conversation context, the last-4 of the new card the customer is trying to add is **7782**.\n\nThe customer confirmed this explicitly in Turn 39: \"the new replacement card I'm trying to add, the one we've been troubleshooting this whole conversation, ends in 7782 with an expiration of September 2027.\"", "passed": true, "input_tokens": 16915, "output_tokens": 80}
+{"question_id": "Q5", "question": "Did the customer receive their subscription proration refund?", "expected_fragment": "prorated", "model_answer": "Based on the context provided, the subscription proration refund has been **initiated and queued for processing**, but has not yet been received.\n\nAccording to the resolution details:\n\n- A prorated refund of **$9.19** was calculated for 15 unused days out of the 31-day billing cycle\n- Combined refunds totaling **$28.18** (the $9.19 prorated refund plus the $18.99 duplicate charge refund) were **initiated** to the customer's Visa debit card as two separate credits\n- Expected posting timeframe: **five to seven business days** (by May 28th), with Memorial Day (May 26th) noted as a possible minor factor\n\nThe refund is in progress but not yet posted to the customer's account. It should arrive within the specified timeframe if no delays occur.", "passed": true, "input_tokens": 16908, "output_tokens": 189}
+{"question_id": "Q6", "question": "What is the structured status of the payment-method update issue (use the exact status token from the case record, not a paraphrase)?", "expected_fragment": "in_progress", "model_answer": "According to the case record provided at the beginning of the context, the payment-method update status is:\n\n**in_progress**", "passed": true, "input_tokens": 16926, "output_tokens": 30}
+===== S2 CONTROL =====
+{"question_id": "Q1", "question": "What was the actual refund amount processed for order ORD-77310?", "expected_fragment": "22.14", "model_answer": "According to the context provided, the refund amount processed for order ORD-77310 was **$22.14**.\n\nThis refund was processed to the customer's Visa for damaged items, along with an additional $5.00 discount code for future orders.", "passed": true, "input_tokens": 16716, "output_tokens": 61}
+{"question_id": "Q6", "question": "What is the structured status of the payment-method update issue (use the exact status token from the case record, not a paraphrase)?", "expected_fragment": "in_progress", "model_answer": "The payment-method update issue does not have a structured status token recorded in the case documentation provided. \n\nThe context shows an **active issue** labeled \"Active issue: Payment-method update\" at the beginning of the conversation thread, but no formal status field, resolution state, or status token (like those used in the resolved cases \u2014 \"cancelled_with_prorated_refund,\" \"duplicate_charge,\" etc.) is present in the case record itself.\n\nThe issue remains **unresolved and ongoing** as of Turn 48 (the customer's most recent message), with the agent and customer still in active troubleshooting. No final outcome, status code, or case closure documentation has been recorded yet.", "passed": false, "input_tokens": 16728, "output_tokens": 152}
+===== S3 VALIDATOR =====
+OK
+===== S4 SHIFT =====
+shift C: 0 new defects
+Shift C 2026-04-30: 3 high + 2 medium defects on capacitor-bank-C-7, all from lot 2026-0430-B (DAR 0.39, ESR ~19 mOhm); 1 low VP-4 vent squeal (repeat). Lot quarantine recommended.
+===== S4 HOT STATE =====
+-rw------- 1 student student 643 Sep 27 05:16 data/hot_state.json
+===== S4 SCRATCHPAD =====
+{"hypothesis_id":"shift-C","evidence":"0 new defects analyzed since 2026-09-26T21:16:50Z","conclusion":"Shift C 2026-04-30: 3 high + 2 medium defects on capacitor-bank-C-7, all from lot 2026-0430-B (DAR 0.39, ESR ~19 mOhm); 1 low VP-4 vent squeal (repeat). Lot quarantine recommended.","ts":"2026-09-27T05:16:50.149521Z"}
