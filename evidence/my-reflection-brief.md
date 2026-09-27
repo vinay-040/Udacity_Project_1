@@ -8,8 +8,7 @@
 
 - **Model(s):** `claude-haiku-4-5-20251001`
 - **OS / Python:** Linux workspace / Python virtual environments
-- **Approx. API spend:** **$0.1481 USD** for the S1 eight-claim run (`runs/20260925_170833/summary.md`)
-
+- **Approx. API spend:** **$0.1481 USD**
 ---
 
 ## Part 1 — Per-system
